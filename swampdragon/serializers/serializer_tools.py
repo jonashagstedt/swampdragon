@@ -2,7 +2,7 @@ from collections import namedtuple
 from django.db.models.fields.related import ForeignKey, ReverseSingleRelatedObjectDescriptor, \
     ManyRelatedObjectsDescriptor, ReverseManyRelatedObjectsDescriptor, ForeignRelatedObjectsDescriptor, \
     SingleRelatedObjectDescriptor
-from django.db.models.related import RelatedObject
+from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.fields.related import ManyToManyField
 
 

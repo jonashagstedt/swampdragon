@@ -48,6 +48,10 @@ Update your settings and add SWAMP_DRAGON_CONNECTION.
     app = web.Application(urls, **app_settings)
     app.listen(PORT, address=HOST, no_keep_alive=False)
     print('Running SwampDragon on {}:{}'.format(HOST, PORT))
+    if settings.DEBUG:
+        print 'URLs:'
+        for u in urls:
+            print u[0]
     try:
         iol = ioloop.IOLoop.instance()
         iol.start()

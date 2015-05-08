@@ -76,7 +76,7 @@ class SubscriberConnection(ConnectionMixin, SockJSConnection):
             handler(self).handle(data)
         except Exception as e:
             if settings.DEBUG:
-                print u'Exception: {}'.format(e)
+                print (u'Exception: {}'.format(e))
             self.abort_connection()
             raise e
 

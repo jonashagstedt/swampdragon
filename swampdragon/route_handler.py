@@ -4,6 +4,7 @@ from .pubsub_providers.base_provider import PUBACTIONS
 from .message_format import format_message
 from .pubsub_providers.model_channel_builder import make_channels, filter_channels_by_model, filter_channels_by_dict
 from .serializers.validation import ModelValidationError
+from .serializers.object_map import get_object_map
 
 SUCCESS = 'success'
 ERROR = 'error'
@@ -173,6 +174,12 @@ class BaseModelRouter(BaseRouter):
         self._query_set = self.get_query_set(**kwargs)
         return self._query_set
 
+    def _serialize(self):
+        if hasattr(self.serializer, 'serialize'):
+            return self.serializer.serialize()
+        else:
+            return self.serializer.data
+
     def get_list(self, **kwargs):
         obj_list = self._get_query_set(**kwargs)
         if self.paginate_by:
@@ -200,7 +207,8 @@ class BaseModelRouter(BaseRouter):
 
     def send_single(self, obj, **kwargs):
         self.serializer = self.serializer_class(instance=obj)
-        self.send(self.serializer.serialize(), **kwargs)
+        data = self._serialize()
+        self.send(data=data, **kwargs)
 
     def on_error(self, errors):
         self.send_error(errors)
@@ -208,17 +216,17 @@ class BaseModelRouter(BaseRouter):
     def create(self, **kwargs):
         initial = self.get_initial('create', **kwargs)
         self.serializer = self.serializer_class(data=kwargs, initial=initial)
-        try:
-            obj = self.serializer.save()
-        except ModelValidationError as error:
-            self.on_error(error.get_error_dict())
+
+        if not self.serializer.is_valid():
+            self.send_error(self.serializer.errors)
             return
 
+        obj = self.serializer.save()
         obj.save()
         self.created(obj, **kwargs)
 
     def created(self, obj, **kwargs):
-        self.send(self.serializer.serialize())
+        self.send(self._serialize())
 
     def update(self, **kwargs):
         initial = self.get_initial('update', **kwargs)
@@ -253,7 +261,7 @@ class BaseModelRouter(BaseRouter):
     def subscribe(self, **kwargs):
         client_channel = kwargs.pop('channel')
         server_channels = make_channels(self.serializer_class, self.include_related, self.get_subscription_contexts(**kwargs))
-        data = self.serializer_class.get_object_map(self.include_related)
+        data = get_object_map(self.serializer_class, self.include_related[:])
         channel_setup = self.make_channel_data(client_channel, server_channels, CHANNEL_DATA_SUBSCRIBE)
         self.send(
             data=data,

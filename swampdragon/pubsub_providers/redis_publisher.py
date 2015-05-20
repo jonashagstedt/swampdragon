@@ -1,6 +1,6 @@
 import json
 import redis
-from .redis_settings import get_redis_host, get_redis_port, get_redis_db
+from .redis_settings import get_redis_host, get_redis_port, get_redis_db, get_redis_password
 
 _redis_cli = None
 
@@ -11,6 +11,7 @@ def get_redis_cli():
         _redis_cli = redis.StrictRedis(
             host=get_redis_host(),
             port=get_redis_port(),
+            password=get_redis_password(),
             db=get_redis_db()
         )
     return _redis_cli

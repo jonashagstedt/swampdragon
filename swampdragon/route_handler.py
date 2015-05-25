@@ -6,6 +6,8 @@ from .pubsub_providers.model_channel_builder import make_channels, filter_channe
 from .serializers.validation import ModelValidationError
 from .serializers.object_map import get_object_map
 
+from django.conf import settings
+
 SUCCESS = 'success'
 ERROR = 'error'
 LOGIN_REQUIRED = 'login_required'
@@ -219,6 +221,8 @@ class BaseModelRouter(BaseRouter):
 
         if not self.serializer.is_valid():
             self.send_error(self.serializer.errors)
+            if settings.DEBUG:
+                print self.serializer.errors
             return
 
         obj = self.serializer.save()
@@ -237,6 +241,8 @@ class BaseModelRouter(BaseRouter):
             self.serializer.save()
         except ModelValidationError as error:
             errors = error.get_error_dict()
+            if settings.DEBUG:
+                print errors
             self.on_error(errors)
             return
         updated_fields = self._get_changed_fields(self.serializer.serialize(), past_state)

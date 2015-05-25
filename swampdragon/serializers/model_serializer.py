@@ -3,7 +3,6 @@ from django.db.models.fields.related import ReverseSingleRelatedObjectDescriptor
     ReverseManyRelatedObjectsDescriptor, ManyRelatedObjectsDescriptor
 from swampdragon.model_tools import get_property, get_model
 from swampdragon.serializers.field_serializers import serialize_field
-from swampdragon.serializers.object_map import get_object_map
 from swampdragon.serializers.serializer import Serializer
 from swampdragon.serializers.serializer_importer import get_serializer
 from swampdragon.serializers.field_deserializers import get_deserializer
@@ -51,7 +50,8 @@ class ModelSerializer(Serializer):
         self.base_fields = self._get_base_fields()
         self.m2m_fields = self._get_m2m_fields()
         self.related_fields = self._get_related_fields()
-        self.errors = {}
+        self.errors = None
+        self._validated = False
 
     class Meta(object):
         pass
@@ -88,21 +88,26 @@ class ModelSerializer(Serializer):
                 self.validate_field(key, val, self.data)
                 self._deserialize_field(key, val)
             except ModelValidationError as err:
+                if self.errors is None:
+                    self.errors = {}
                 self.errors.update(err.get_error_dict())
-
-        if self.errors:
-            raise ModelValidationError(errors=self.errors)
 
         return self.instance
 
-    def save(self):
+    def is_valid(self):
         self.deserialize()
-        if self.errors:
-            raise ModelValidationError(self.errors)
         try:
             self.instance.clean_fields()
         except ValidationError as e:
-            raise ModelValidationError(e.message_dict)
+            self.errors = e.message_dict
+        self._validated = True
+        return self.errors is None
+
+    def save(self):
+        if not self._validated:
+            self.is_valid()
+        if self.errors:
+            raise ModelValidationError(self.errors)
         self.instance.save()
 
         # Serialize related fields
@@ -219,10 +224,6 @@ class ModelSerializer(Serializer):
 
         # Serialize the field
         return serialize_field(val)
-
-    @classmethod
-    def get_object_map(cls, include_serializers=None, ignore_serializers=None):
-        return get_object_map(cls, ignore_serializers)
 
     @classmethod
     def get_base_channel(cls):

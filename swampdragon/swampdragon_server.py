@@ -7,7 +7,7 @@ from swampdragon import discover_routes, load_field_deserializers, VERSION
 from swampdragon.settings_provider import SettingsHandler
 
 
-def _output_server(host, port):
+def _output_server(host, port, urls):
     """
     Print info about the current instance
     of SwampDragon
@@ -17,6 +17,8 @@ def _output_server(host, port):
     print('DRAGON_URL: {}'.format(settings.DRAGON_URL))
     print('Version {}'.format('.'.join([str(v) for v in VERSION])))
     print('Debug: {}'.format(settings.DEBUG))
+    if settings.DEBUG:
+        print('URLs: {}'.format('\n'.join([url[0] for url in urls])))
     print('Quit the server with ctrl+c')
     print('---------------------------')
 
@@ -62,7 +64,7 @@ Update your settings and add SWAMP_DRAGON_CONNECTION.
     app = web.Application(urls, **app_settings)
     app.listen(PORT, address=HOST, no_keep_alive=False)
 
-    _output_server(host=HOST, port=PORT)
+    _output_server(host=HOST, port=PORT, urls=urls)
 
     try:
         iol = ioloop.IOLoop.instance()

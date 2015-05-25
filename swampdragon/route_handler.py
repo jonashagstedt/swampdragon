@@ -223,6 +223,7 @@ class BaseModelRouter(BaseRouter):
             self.send_error(self.serializer.errors)
             if settings.DEBUG:
                 print self.serializer.errors
+                print self.serializer.data
             return
 
         obj = self.serializer.save()
@@ -243,6 +244,7 @@ class BaseModelRouter(BaseRouter):
             errors = error.get_error_dict()
             if settings.DEBUG:
                 print errors
+                print self.serializer.data
             self.on_error(errors)
             return
         updated_fields = self._get_changed_fields(self.serializer.serialize(), past_state)

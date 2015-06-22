@@ -3,10 +3,12 @@ from swampdragon.connections.sockjs_connection import SubscriberConnection
 from swampdragon.route_handler import BaseRouter, UnexpectedVerbException
 from swampdragon.testing.dragon_testcase import DragonTestCase
 from swampdragon import route_handler
+from django.conf import settings as django_settings
 import uuid
 
 
 class TestSession(object):
+
     def __init__(self, is_open=True):
         self.session_id = uuid.uuid4().hex
         self.is_closed = is_open is False
@@ -28,7 +30,9 @@ class TestRouter(BaseRouter):
 
 
 class TestSubscriberConnection(DragonTestCase):
+
     def setUp(self):
+        django_settings.SWAMP_DRAGON_MIDDLEWARE_CLASSES = ['swampdragon.mock_middleware.TestMiddleware']
         self.session = TestSession()
         self.connection = SubscriberConnection(self.session)
 
@@ -72,3 +76,11 @@ class TestSubscriberConnection(DragonTestCase):
         expected = {'key': 'value'}
         actual = self.connection.to_json(expected)
         self.assertEqual(expected, actual)
+
+    def test_middleware_processing(self):
+        route_handler.register(TestRouter)
+        data = {'verb': 'say_hello', 'route': TestRouter.get_name()}
+        with self.assertRaises(AttributeError):
+            self.connection.dummy
+        self.connection.on_message(data)
+        self.assertTrue(self.connection.dummy)

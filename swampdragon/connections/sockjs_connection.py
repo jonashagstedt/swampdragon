@@ -5,6 +5,7 @@ from ..pubsub_providers.subscriber_factory import get_subscription_provider
 from .. import route_handler
 from ..sessions.sessions import get_session_store
 from ..same_origin import set_origin_connection, test_origin
+from django.utils.importlib import import_module
 import json
 
 
@@ -28,6 +29,7 @@ def is_heartbeat_enabled():
 
 
 class ConnectionMixin(object):
+
     def to_json(self, data):
         """
         If the message is a dict, return it.
@@ -44,6 +46,7 @@ class ConnectionMixin(object):
 
 class SubscriberConnection(ConnectionMixin, SockJSConnection):
     pub_sub = None
+    user = None
 
     def __init__(self, session):
         super(SubscriberConnection, self).__init__(session)
@@ -83,6 +86,12 @@ class SubscriberConnection(ConnectionMixin, SockJSConnection):
             if data == {'heartbeat': '1'}:
                 self.on_heartbeat()
                 return
+            middleware_classes = getattr(settings, 'SWAMP_DRAGON_MIDDLEWARE_CLASSES', None)
+            if middleware_classes:
+                for middleware_class in middleware_classes:
+                    middleware_path, middleware_name = middleware_classes[0].rsplit('.', 1)
+                    middleware = getattr(import_module(middleware_path), middleware_name)
+                    middleware().process_request(self, data)
             handler = route_handler.get_route_handler(data['route'])
             handler(self).handle(data)
         except Exception as e:

@@ -65,22 +65,22 @@ class SelfPublishModel(object):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.action = PUBACTIONS.created
+            self._action = PUBACTIONS.created
             self.changed_fields = None
         else:
-            self.action = PUBACTIONS.updated
+            self._action = PUBACTIONS.updated
             self.changed_fields = self.get_changed_fields()
         super(SelfPublishModel, self).save(*args, **kwargs)
-        self._publish(self.action, self.changed_fields)
+        self._publish(self._action, self.changed_fields)
 
 
 @receiver(m2m_changed)
 def _self_publish_model_m2m_change(sender, instance, action, model, pk_set, **kwargs):
     if not isinstance(instance, SelfPublishModel):
         return
-    instance.action = PUBACTIONS.updated
+    instance._action = PUBACTIONS.updated
     if action in ['post_add', 'post_clear', 'post_remove']:
-        instance._publish(instance.action, instance._serializer.opts.publish_fields)
+        instance._publish(instance._action, instance._serializer.opts.publish_fields)
 
 
 @receiver(pre_delete)

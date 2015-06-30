@@ -12,15 +12,15 @@ For more information on how to use the BaseRouter see [the BaseRouter](/document
 
 ## ModelRouter
 
-If you are using a self-publishing model, choose this router, as the ```ModelPublisherRouter``` would issue two updates unless you override the ```updated``` function.
+If you are using a self-publishing model, choose this router, as the ```ModelPubRouter``` would issue two updates unless you override the ```updated``` function.
 
 This is also a good alternative if you are not relying on the publishing feature of the router.
 
 For more information see [ModelRouter](/documentation/routers-base-model-router).
 
 
-## ModelPublisherRouter
+## ModelPubRouter
 
-If you don't intend to use self-publishing models and want to benefit from having more granular control over the model data being published, then use the ```ModelPublisherRouter```.
+If you don't intend to use self-publishing models and want to benefit from having more granular control over the model data being published, then use the ```ModelPubRouter```.
 
-For more information see [ModelPublisherRouter](/documentation/routers-base-model-publisher-router).
+For more information see [ModelPubRouter](/documentation/routers-base-model-publisher-router).

@@ -39,7 +39,7 @@ Make sure to inject ```dataService``` into your controller.
         $dragon.data.onReady(function() {
             $dragon.data.subscribe('foo-router', $scope.channel, {}).then(function(response) {
                 // this assume the foo-router is a ModelRouter
-                // or a ModelPublisherRouter
+                // or a ModelPubRouter
                 $scope.dataMapper = new DataMapper(response.data);
             });
         });

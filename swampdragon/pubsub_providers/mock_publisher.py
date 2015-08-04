@@ -1,15 +1,12 @@
 import json
 
 
-subscribers = {}
-
-
 class MockPublisher(object):
     def __init__(self):
-        self.subscribers = subscribers
+        self.subscribers = {}
 
     def publish(self, channel, message):
-        subs = subscribers.get(channel)
+        subs = self.subscribers.get(channel)
         if not subs:
             return
         for subscriber in subs:
@@ -26,20 +23,20 @@ class MockPublisher(object):
 
     def subscribe(self, channels, subscriber):
         for c in channels:
-            if c not in subscribers.keys():
-                subscribers[c] = []
-            subscribers[c].append(subscriber)
+            if c not in self.subscribers.keys():
+                self.subscribers[c] = []
+            self.subscribers[c].append(subscriber)
 
     def unsubscribe(self, channels, subscriber):
         if not isinstance(channels, list):
             return self.unsubscribe([channels], subscriber)
         for channel in channels:
-            subscribers[channel].remove(subscriber)
+            self.subscribers[channel].remove(subscriber)
 
-        empty_channels = [k for (k, v) in subscribers.items() if not v]
+        empty_channels = [k for (k, v) in self.subscribers.items() if not v]
         for k in empty_channels:
-            del subscribers[k]
+            del self.subscribers[k]
 
     def remove_subscriber(self, subscriber):
-        channels = [c for c in subscribers if subscriber in subscribers[c]]
+        channels = [c for c in self.subscribers if subscriber in self.subscribers[c]]
         self.unsubscribe(channels, subscriber)

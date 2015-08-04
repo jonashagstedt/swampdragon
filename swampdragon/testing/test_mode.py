@@ -2,9 +2,6 @@ import os
 from django.conf import settings
 
 
-_pub_sub = None
-
-
 def set_test_mode():
     os.environ.setdefault('SWAMPDRAGON_TESTMODE', 'True')
 

@@ -1,4 +1,6 @@
+from abc import ABCMeta, abstractmethod
 from dateutil.parser import parse
+from django.utils import six
 
 
 deserializer_map = {}
@@ -8,9 +10,10 @@ def register_field_deserializer(field_name, deserializer):
     deserializer_map[field_name] = deserializer
 
 
-class BaseFieldDeserializer(object):
+class BaseFieldDeserializer(six.with_metaclass(ABCMeta, object)):
+    @abstractmethod
     def __call__(self, *args, **kwargs):
-        raise NotImplemented()
+        pass
 
 
 class DateTimeDeserializer(BaseFieldDeserializer):

@@ -73,25 +73,9 @@ class BrokenPermission(RoutePermission):
     pass
 
 
-class BrokenPermissionRouter(BaseRouter):
-    valid_verbs = ['do_something']
-    permission_classes = [BrokenPermission()]
-
-    def do_something(self, **kwargs):
-        pass
-
-
 class HalfAPermission(RoutePermission):
     def test_permission(self, handler, verb, **kwargs):
         return self.permission_failed(handler)
-
-
-class HalfAPermissionRouter(BaseRouter):
-    valid_verbs = ['do_something']
-    permission_classes = [HalfAPermission()]
-
-    def do_something(self, **kwargs):
-        pass
 
 
 class TestPermissions(DragonTestCase):
@@ -130,11 +114,19 @@ class TestPermissions(DragonTestCase):
         self.assertEqual(self.connection.last_message['context']['state'], SUCCESS)
 
     def test_broken_permission(self):
-        router = BrokenPermissionRouter(self.connection)
-        with self.assertRaises(NotImplementedError):
-            router.handle({'verb': 'do_something'})
+        with self.assertRaises(TypeError):
+            class BrokenPermissionRouter(BaseRouter):
+                valid_verbs = ['do_something']
+                permission_classes = [BrokenPermission()]
+
+                def do_something(self, **kwargs):
+                    pass
 
     def test_permission_missing_permission_failed(self):
-        router = HalfAPermissionRouter(self.connection)
-        with self.assertRaises(NotImplementedError):
-            router.handle({'verb': 'do_something'})
+        with self.assertRaises(TypeError):
+            class HalfAPermissionRouter(BaseRouter):
+                valid_verbs = ['do_something']
+                permission_classes = [HalfAPermission()]
+
+                def do_something(self, **kwargs):
+                    pass

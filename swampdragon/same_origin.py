@@ -1,16 +1,12 @@
-from django.conf import settings
 import uuid
+from swampdragon.settings import dragon_settings
 
 
 SAME_ORIGIN_COOKIE_NAME = 'sdso'
 
 
-def _origin_required():
-    return getattr(settings, 'SWAMP_DRAGON_SAME_ORIGIN', False)
-
-
 def test_origin(connection):
-    if not _origin_required():
+    if not dragon_settings.SWAMP_DRAGON_SAME_ORIGIN:
         return True
 
     if not hasattr(connection, SAME_ORIGIN_COOKIE_NAME):
@@ -24,7 +20,7 @@ def set_origin_cookie(request_handler):
 
 
 def set_origin_connection(request, connection):
-    if not _origin_required():
+    if not dragon_settings.SWAMP_DRAGON_SAME_ORIGIN:
         return True
 
     so_cookie = request.get_cookie(SAME_ORIGIN_COOKIE_NAME)

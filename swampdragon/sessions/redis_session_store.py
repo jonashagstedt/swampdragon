@@ -1,7 +1,7 @@
-from django.conf import settings
+import json
+from swampdragon.settings import dragon_settings
 from ..pubsub_providers import redis_publisher
 from .session_store import BaseSessionStore
-import json
 
 
 class RedisSessionStore(BaseSessionStore):
@@ -17,7 +17,7 @@ class RedisSessionStore(BaseSessionStore):
             val = json.dumps(val)
         complete_key = self.get_complete_key(key)
         self.client.set(complete_key, val)
-        self.client.expire(complete_key, getattr(settings, 'SESSION_EXPIRATION_TIME', 30) * 60)
+        self.client.expire(complete_key, dragon_settings.SESSION_EXPIRATION_TIME * 60)
 
     def get(self, key):
         complete_key = self.get_complete_key(key)
@@ -29,4 +29,4 @@ class RedisSessionStore(BaseSessionStore):
 
     def refresh_key_timeout(self, key):
         complete_key = self.get_complete_key(key)
-        self.client.expire(complete_key, getattr(settings, 'SESSION_EXPIRATION_TIME', 30) * 60)
+        self.client.expire(complete_key, dragon_settings.SESSION_EXPIRATION_TIME * 60)

@@ -1,16 +1,16 @@
 import json
 import tornadoredis.pubsub
 import tornadoredis
+from swampdragon.settings import dragon_settings
 from .base_provider import BaseProvider
-from .redis_settings import get_redis_host, get_redis_port, get_redis_db
 
 
 class RedisSubProvider(BaseProvider):
     def __init__(self):
         self._subscriber = tornadoredis.pubsub.SockJSSubscriber(tornadoredis.Client(
-            host=get_redis_host(),
-            port=get_redis_port(),
-            selected_db=get_redis_db()
+            host=dragon_settings.SWAMP_DRAGON_REDIS_HOST,
+            port=dragon_settings.SWAMP_DRAGON_REDIS_PORT,
+            selected_db=dragon_settings.SWAMP_DRAGON_REDIS_DB
         ))
 
     def close(self, broadcaster):

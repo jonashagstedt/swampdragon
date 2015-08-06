@@ -1,12 +1,11 @@
-from swampdragon import route_handler
-from swampdragon.pubsub_providers.subscriber_factory import get_subscription_provider
-from swampdragon.sessions.sessions import get_session_store
 import json
 import uuid
+from swampdragon import route_handler
+from swampdragon.settings import dragon_settings
+from swampdragon.pubsub_providers.subscriber_factory import get_subscription_provider
 
 
 pubsub = get_subscription_provider()
-session_store = get_session_store()
 
 
 class TestSession(object):
@@ -26,7 +25,7 @@ class TestConnection(object):
         self.sent_data = []
         self.published_data = []
         self.pub_sub = pubsub
-        self.session_store = session_store(self)
+        self.session_store = dragon_settings.SWAMP_DRAGON_SESSION_STORE(self)
 
     def send(self, message):
         self.sent_data.append(json.dumps(message))

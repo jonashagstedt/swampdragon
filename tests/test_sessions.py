@@ -3,7 +3,7 @@ from swampdragon.route_handler import BaseRouter
 from swampdragon.testing.dragon_testcase import DragonTestCase
 from swampdragon.connections.mock_connection import TestConnection
 from swampdragon.sessions.session_store import BaseSessionStore
-from swampdragon.sessions import sessions
+from swampdragon.settings import dragon_settings
 from .test_subscriber_connection import TestSession
 import json
 
@@ -72,7 +72,8 @@ class TestSessions(DragonTestCase):
 
 class TestCustomSessionStore(DragonTestCase):
     def test_custom_session_store(self):
-        sessions.session_store = TestSessionStore
-        session_store = sessions.get_session_store()(self.connection)
+        # this test is rather pointless now
+        dragon_settings.SWAMP_DRAGON_SESSION_STORE = TestSessionStore
+        session_store = dragon_settings.SWAMP_DRAGON_SESSION_STORE(self.connection)
         session_store.set('key', 'val')
         self.assertEqual(session_store.get('key'), 'val')

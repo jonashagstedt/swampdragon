@@ -1,30 +1,11 @@
-from django.conf import settings
 from sockjs.tornado import SockJSConnection
 from tornado.ioloop import PeriodicCallback
+from django.conf import settings
+from swampdragon.settings import dragon_settings
 from ..pubsub_providers.subscriber_factory import get_subscription_provider
 from .. import route_handler
-from ..sessions.sessions import get_session_store
 from ..same_origin import set_origin_connection, test_origin
 import json
-
-
-session_store = get_session_store()
-heartbeat_frequency = None
-heartbeat_enabled = None
-
-
-def get_heartbeat_frequency():
-    global heartbeat_frequency
-    if not heartbeat_frequency:
-        heartbeat_frequency = getattr(settings, 'SWAMP_DRAGON_HEARTBEAT_FREQUENCY', 1000 * 60 * 20)  # Default to 20 minutes
-    return heartbeat_frequency
-
-
-def is_heartbeat_enabled():
-    global heartbeat_enabled
-    if not heartbeat_enabled:
-        heartbeat_enabled = getattr(settings, 'SWAMP_DRAGON_HEARTBEAT_ENABLED', False)
-    return heartbeat_enabled
 
 
 class ConnectionMixin(object):
@@ -47,7 +28,7 @@ class SubscriberConnection(ConnectionMixin, SockJSConnection):
 
     def __init__(self, session):
         super(SubscriberConnection, self).__init__(session)
-        self.session_store = session_store(self)
+        self.session_store = dragon_settings.SWAMP_DRAGON_SESSION_STORE(self)
         self.pub_sub = get_subscription_provider()
 
     def _close_invalid_origin(self):
@@ -59,8 +40,8 @@ class SubscriberConnection(ConnectionMixin, SockJSConnection):
             return
 
         super(SubscriberConnection, self).on_open(request)
-        if is_heartbeat_enabled():
-            self.periodic_callback = PeriodicCallback(self.send_heartbeat, get_heartbeat_frequency())
+        if dragon_settings.SWAMP_DRAGON_HEARTBEAT_ENABLED:
+            self.periodic_callback = PeriodicCallback(self.send_heartbeat, dragon_settings.SWAMP_DRAGON_HEARTBEAT_FREQUENCY)
             self.periodic_callback.start()
 
     def send_heartbeat(self):

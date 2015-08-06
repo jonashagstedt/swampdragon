@@ -8,6 +8,7 @@ from tornado import web, ioloop
 from sockjs.tornado import SockJSRouter
 from swampdragon import discover_routes, load_field_deserializers, VERSION
 from swampdragon.settings_provider import SettingsHandler
+from swampdragon.settings import dragon_settings
 
 
 def _output_server(host, port):
@@ -17,7 +18,7 @@ def _output_server(host, port):
     """
     print('-------- SwampDragon ------')
     print('Running SwampDragon on {}:{}'.format(host, port))
-    print('DRAGON_URL: {}'.format(settings.DRAGON_URL))
+    print('DRAGON_URL: {}'.format(dragon_settings.DRAGON_URL))
     print('Version {}'.format('.'.join([str(v) for v in VERSION])))
     print('Debug: {}'.format(settings.DEBUG))
     print('Quit the server with ctrl+c')
@@ -28,8 +29,8 @@ def run_server(host_port=None):
     if hasattr(django, 'setup'):
         django.setup()
 
-    HOST = getattr(settings, 'SWAMP_DRAGON_HOST', '127.0.0.1')
-    PORT = getattr(settings, 'SWAMP_DRAGON_PORT', 9999)
+    HOST = dragon_settings.SWAMP_DRAGON_HOST
+    PORT = dragon_settings.SWAMP_DRAGON_PORT
 
     if host_port is not None:
         HOST = host_port.split(':')[0]
@@ -45,10 +46,10 @@ Update your settings and add SWAMP_DRAGON_CONNECTION.
 --------------
         ''')
 
-    module_name, cls_name = settings.SWAMP_DRAGON_CONNECTION[0].rsplit('.', 1)
+    module_name, cls_name = dragon_settings.SWAMP_DRAGON_CONNECTION[0].rsplit('.', 1)
     module = import_module(module_name)
     cls = getattr(module, cls_name)
-    channel = settings.SWAMP_DRAGON_CONNECTION[1]
+    channel = dragon_settings.SWAMP_DRAGON_CONNECTION[1]
     routers.append(SockJSRouter(cls, channel))
 
     app_settings = {

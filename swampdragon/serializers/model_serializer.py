@@ -67,9 +67,9 @@ class ModelSerializer(Serializer):
         return [f for f in self.opts.update_fields if f not in self.base_fields and f not in self.m2m_fields]
 
     def _get_m2m_fields(self):
-        try:
+        if hasattr(self.opts.model._meta,'get_all_related_many_to_many_objects'):
             related_m2m = [f.get_accessor_name() for f in self.opts.model._meta.get_all_related_many_to_many_objects()]
-        except AttributeError:
+        else:
             related_m2m = [f.get_accessor_name() for f in [_f for _f in self.opts.model._meta.get_fields(include_hidden=True) if _f.many_to_many and _f.auto_created]]
         m2m_fields = [f.name for f in self.opts.model._meta.local_many_to_many]
         m2m = m2m_fields + related_m2m

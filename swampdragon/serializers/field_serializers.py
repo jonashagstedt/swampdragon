@@ -1,6 +1,6 @@
 from datetime import date
 from decimal import Decimal
-from django.db.models.fields.files import ImageFieldFile, FileField
+from django.db.models.fields.files import ImageFieldFile, FileField, FieldFile
 
 
 class BaseSerializer(object):
@@ -31,6 +31,6 @@ def serialize_field(value):
         return DateSerializer().serialize(value)
     if isinstance(value, Decimal):
         return DateSerializer().serialize(value)
-    if isinstance(value, ImageFieldFile) or isinstance(value, FileField):
+    if isinstance(value, ImageFieldFile) or isinstance(value, FileField) or isinstance(value, FieldFile):
         return FileSerializer().serialize(value)
     return value

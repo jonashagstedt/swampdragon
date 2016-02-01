@@ -4,7 +4,8 @@ redis_host = None
 redis_port = None
 redis_db = None
 redis_password = None
-
+redis_sentinel = None
+redis_sentinel_master = False
 
 def get_redis_host():
     global redis_host

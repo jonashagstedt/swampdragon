@@ -32,3 +32,16 @@ def get_redis_password():
     if not redis_password:
         redis_password = getattr(settings, 'SWAMP_DRAGON_REDIS_PASSWORD', None)
     return redis_password
+
+
+def is_redis_sentinel():
+    global redis_sentinel
+    if not redis_sentinel:
+        redis_sentinel = getattr(settings, 'SWAMP_DRAGON_USE_REDIS_SENTINEL', False)
+    return redis_sentinel
+
+def get_redis_sentinel_master():
+    global redis_sentinel_master
+    if not redis_sentinel_master:
+        redis_sentinel_master = getattr(settings, 'SWAMP_DRAGON_REDIS_SENTINEL_MASTER', 'mymaster') # default master name
+    return redis_sentinel_master

@@ -2,9 +2,10 @@ try:
     from django.db.models.fields.related import ReverseSingleRelatedObjectDescriptor, SingleRelatedObjectDescriptor, \
         ForeignRelatedObjectsDescriptor, ManyRelatedObjectsDescriptor, ReverseManyRelatedObjectsDescriptor
 except ImportError:
-    from django.db.models.fields.related_descriptors import ForwardManyToOneDescriptor as ReverseSingleRelatedObjectDescriptor,\
-        ReverseOneToOneDescriptor as SingleRelatedObjectDescriptor,\
-        ReverseManyToOneDescriptor as ForeignRelatedObjectsDescriptor, ManyToManyDescriptor as ManyRelatedObjectsDescriptor
+    from django.db.models.fields.related_descriptors import ForwardManyToOneDescriptor as \
+        ReverseSingleRelatedObjectDescriptor, ReverseOneToOneDescriptor as SingleRelatedObjectDescriptor,\
+        ReverseManyToOneDescriptor as ForeignRelatedObjectsDescriptor,\
+        ManyToManyDescriptor as ManyRelatedObjectsDescriptor
     ReverseManyRelatedObjectsDescriptor = None
 
 

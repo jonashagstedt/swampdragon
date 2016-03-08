@@ -1,6 +1,11 @@
 from django.core.exceptions import ValidationError
-from django.db.models.fields.related import ReverseSingleRelatedObjectDescriptor, ForeignRelatedObjectsDescriptor, \
-    ReverseManyRelatedObjectsDescriptor, ManyRelatedObjectsDescriptor
+try:
+    from django.db.models.fields.related import ReverseSingleRelatedObjectDescriptor, ForeignRelatedObjectsDescriptor, \
+        ReverseManyRelatedObjectsDescriptor, ManyRelatedObjectsDescriptor
+except ImportError:
+    from django.db.models.fields.related_descriptors import ForwardManyToOneDescriptor as ReverseSingleRelatedObjectDescriptor,\
+        ReverseManyToOneDescriptor as ForeignRelatedObjectsDescriptor, ManyToManyDescriptor as ManyRelatedObjectsDescriptor
+    ReverseManyRelatedObjectsDescriptor = None
 from swampdragon.model_tools import get_property, get_model
 from swampdragon.serializers.field_serializers import serialize_field
 from swampdragon.serializers.object_map import get_object_map

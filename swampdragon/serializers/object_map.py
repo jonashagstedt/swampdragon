@@ -1,5 +1,11 @@
-from django.db.models.fields.related import ReverseSingleRelatedObjectDescriptor, SingleRelatedObjectDescriptor, \
-    ForeignRelatedObjectsDescriptor, ManyRelatedObjectsDescriptor, ReverseManyRelatedObjectsDescriptor
+try:
+    from django.db.models.fields.related import ReverseSingleRelatedObjectDescriptor, SingleRelatedObjectDescriptor, \
+        ForeignRelatedObjectsDescriptor, ManyRelatedObjectsDescriptor, ReverseManyRelatedObjectsDescriptor
+except ImportError:
+    from django.db.models.fields.related_descriptors import ForwardManyToOneDescriptor as ReverseSingleRelatedObjectDescriptor,\
+        ReverseOneToOneDescriptor as SingleRelatedObjectDescriptor,\
+        ReverseManyToOneDescriptor as ForeignRelatedObjectsDescriptor, ManyToManyDescriptor as ManyRelatedObjectsDescriptor
+    ReverseManyRelatedObjectsDescriptor = None
 
 
 def _construct_graph(parent_type, child_type, via, is_collection, property_name):

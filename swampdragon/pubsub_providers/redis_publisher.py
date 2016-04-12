@@ -1,8 +1,7 @@
 import json
 import redis
 from redis.sentinel import Sentinel
-from swampdragon.pubsub_providers.redis_settings import is_redis_sentinel, get_redis_sentinel_master
-from .redis_settings import get_redis_host, get_redis_port, get_redis_db, get_redis_password
+from .redis_settings import get_redis_host, get_redis_port, get_redis_db, get_redis_password, is_redis_sentinel, get_redis_sentinel_master
 
 _redis_cli = None
 

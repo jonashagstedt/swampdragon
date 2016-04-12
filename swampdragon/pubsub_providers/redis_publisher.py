@@ -1,19 +1,25 @@
 import json
 import redis
-from .redis_settings import get_redis_host, get_redis_port, get_redis_db, get_redis_password
+from redis.sentinel import Sentinel
+from .redis_settings import get_redis_host, get_redis_port, get_redis_db, get_redis_password, is_redis_sentinel, get_redis_sentinel_master
 
 _redis_cli = None
 
 
 def get_redis_cli():
     global _redis_cli
-    if not _redis_cli:
+    if not _redis_cli and is_redis_sentinel():
+        sentinel = Sentinel([(get_redis_host(), get_redis_port())], socket_timeout=0.1)
+        _redis_cli = sentinel.master_for(get_redis_sentinel_master(), socket_timeout=0.1)
+
+    elif not _redis_cli:
         _redis_cli = redis.StrictRedis(
             host=get_redis_host(),
             port=get_redis_port(),
             db=get_redis_db(),
             password=get_redis_password()
         )
+
     return _redis_cli
 
 

@@ -163,7 +163,7 @@ The following JavaScript will call `add_one` and log the value to the console
     
 ### Pre-defined functions for handling models
 
-In the case of a `ModelRouter` (or `ModelPublisherRouter`) there are pre-defined functions to handle manipulating instances of the model.
+In the case of a `ModelRouter` (or `ModelPubRouter`) there are pre-defined functions to handle manipulating instances of the model.
 
 
 #### getSingle

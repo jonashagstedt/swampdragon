@@ -42,12 +42,12 @@ Create serializers.py in your app directory.
 Add routers.py to your app directory (same as your models.py, and serializers.py)
   
     from swampdragon import route_handler
-    from swampdragon.route_handler import ModelPublisherRouter
+    from swampdragon.route_handler import ModelPubRouter
     from .serializers import FooSerializer
     from .models import Foo
     
     
-    class FooRouter(ModelPublisherRouter):
+    class FooRouter(ModelPubRouter):
         serializer_class = FooSerializer
         model = Foo
         route_name = 'foo'

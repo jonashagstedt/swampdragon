@@ -16,6 +16,8 @@ connection, extending `DjangoSubscriberConnection` with a user property.
 
 It can be used by either specifying the `permission_classes` on the router:
 
+    from swampdragon.permissions import LoginRequired
+
     class FooRouter(ModelRouter):
         ...
         permission_classes = [LoginRequired()]

@@ -1,12 +1,12 @@
 # ModelPubRouter
 
 The ```ModelPubRouter``` is similar to ```ModelRouter``` with one exceptions:
-the ModelPublisherRouter will publish data when a CRUD function is invoked on the router.
+the ModelPubRouter will publish data when a CRUD function is invoked on the router.
 
 This router is a good option when self-publishing models are not used.
 Since a self-publishing model will publish it self when it's changed, this could result in duplicate updates.
 
-If a model shouldn't be published unless certain criteria is met, it's better to use the ModelPublisherRouter.
+If a model shouldn't be published unless certain criteria is met, it's better to use the ModelPubRouter.
 
 Override the ```created```, ```updated``` and/or ```deleted``` function to handle the data being published.
 

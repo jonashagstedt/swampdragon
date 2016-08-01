@@ -7,7 +7,7 @@ To enable pagination simply set the ```paginate_by``` property on your router.
         
         ...
 
-This only applies to ```ModelRouter``` and ```ModelPublisherRouter```
+This only applies to ```ModelRouter``` and ```ModelPubRouter```
 
 
 ## Route handler

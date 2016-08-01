@@ -19,7 +19,7 @@ The base model router is used to create, read, update and delete Django models.
 
 It is also the recommended router for self-publishing models as it won't publish when ```updated``` is invoked.
 
-Both the ```ModelRouter``` and the ```ModelPublisherRouter``` requires a model and serializer class.
+Both the ```ModelRouter``` and the ```ModelPubRouter``` requires a model and serializer class.
 
 
 ## get_object and get_query_set
@@ -29,7 +29,7 @@ The ```get_object``` and ```get_query_set``` function is analogous to Django's c
 By default a router provides verbs for ```get_single``` and ```get_list```. Rather than overriding these function,
 simply define get_object or get_query_set.
 
-If a router is either a ```ModelRouter``` or a ```ModelPublisherRouter``` and all the default verbs are
+If a router is either a ```ModelRouter``` or a ```ModelPubRouter``` and all the default verbs are
 available, SwampDragon will raise an exception when you try to start the server if get_single and get_query_set are
 both missing.
 

@@ -18,7 +18,7 @@ The minium required script includes to use SwampDragon
     <script type="text/javascript" src="{{ STATIC_URL }}swampdragon/js/swampdragon.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}swampdragon/js/datamapper.js"></script>
 
-If you are using ```ModelRouter``` or ```ModelPublisherRouter``` it's recommended to include the DataMapper as well.
+If you are using ```ModelRouter``` or ```ModelPubRouter``` it's recommended to include the DataMapper as well.
 
     <script type="text/javascript" src="{{ STATIC_URL }}swampdragon/js/datamapper.js"></script>
 

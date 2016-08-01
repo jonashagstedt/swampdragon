@@ -8,7 +8,7 @@ There are 3 different types of base routers
 
 +  [BaseRouter](/documentation/routers-base-router/)
 +  [ModelRouter](/documentation/routers-base-model-router/)
-+  [ModelPublisherRouter](/documentation/routers-base-model-publisher-router/)
++  [ModelPubRouter](/documentation/routers-base-model-publisher-router/)
 
 For a general guide on choosing your base router, see [Choosing a router](/documentation/choosing-a-router/) 
 
@@ -91,7 +91,7 @@ This is where ```get_subscription_contexts``` becomes relevant.
             
 The following router would allow a user to subscribe to all published foo models where the title contains whatever title the user submitted.
 
-Note that ```get_subscription_contexts``` only works with ModelRouter and ModelPublisherRouter as they are the only model based routers.
+Note that ```get_subscription_contexts``` only works with ModelRouter and ModelPubRouter as they are the only model based routers.
 
 The following works with ```get_subscription_contexts```:
 

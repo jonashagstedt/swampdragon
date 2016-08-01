@@ -165,7 +165,7 @@ This is called when a broadcast message is received.
         // Update the movie data with the DataMapper
     }
     
-In case the update comes from either a ModelRouter or a ModelPublisherRouter the message contains both data and the action.
+In case the update comes from either a ModelRouter or a ModelPubRouter the message contains both data and the action.
 The action will be either ```created```, ```updated``` or ```deleted```. 
 Note that this isn't necessarily the case when publishing non-model data.
 

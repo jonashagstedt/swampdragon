@@ -86,7 +86,7 @@ function connect () {
 
 
 function onopen () {
-    connectionAttempt = 0;
+    connectionAttempts = 0;
     isReady = true;
     eventHandler.emit('open');
     eventHandler.emitOnce('ready');
@@ -96,7 +96,7 @@ function onopen () {
 function onclose (data) {
     connection.socket = null;
     isReady = false;
-    if (connectionAttempt === 0) {
+    if (connectionAttempts === 0) {
         eventHandler.emit('close');
     }
 
@@ -107,11 +107,11 @@ function onclose (data) {
     }
 
     setTimeout(function() {
-        if (connectionAttempt < 10) {
-            connectionAttempt++;
+        if (connectionAttempts < 10) {
+            connectionAttempts++;
             connect();
         }
-    }, (connectionAttempt * 500) + 100);
+    }, (connectionAttempts * 500) + 100);
 }
 
 function onmessage (e) {

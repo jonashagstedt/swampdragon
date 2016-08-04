@@ -1,4 +1,5 @@
 from django.db.models import ForeignKey
+from django.conf import settings
 from .pubsub_providers.base_provider import PUBACTIONS
 from .model_tools import get_property
 from .pubsub_providers.model_publisher import publish_model
@@ -77,7 +78,13 @@ class SelfPublishModel(object):
         return self._serializer.serialize()
 
     def _publish(self, action, changed_fields=None):
-        publish_model(self, self._serializer, action, changed_fields)
+        try:
+            PUBLISH_ENABLED = getattr(settings, 'SWAMP_DRAGON_PUBLISH_ENABLED', True)
+    
+            if PUBLISH_ENABLED:
+                publish_model(self, self._serializer, action, changed_fields)
+        except Exception:
+            pass  # not the best practice, but we don't want anything to fail if Redis is unaccessible...
 
     def save(self, *args, **kwargs):
         if not self.pk:

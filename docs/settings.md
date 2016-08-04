@@ -57,6 +57,9 @@ This setting will override the default `localhost` host
 
 This setting will override the default `9999` port
 
+### ```SWAMP_DRAGON_PUBLISH_ENABLED```
+
+If set to ```False``` it turns the publishing of changes off. Default value is ```True```.
 
 ## JavaScript settings (settings exposed to clients via JavaScript)
 

@@ -29,6 +29,9 @@ class TestSessionStore(BaseSessionStore):
     def get(self, key):
         return self.data[key]
 
+    def refresh_key_timeout(self, key):
+        pass
+
 
 class TestSessions(DragonTestCase):
     def setUp(self):

@@ -1,3 +1,7 @@
+from abc import ABCMeta, abstractmethod
+from django.utils import six
+
+
 def login_required(func):
     def not_logged_in(self, **kwargs):
         self.send_login_required({'signin_required': 'you need to sign in'})
@@ -11,12 +15,14 @@ def login_required(func):
     return check_user
 
 
-class RoutePermission(object):
+class RoutePermission(six.with_metaclass(ABCMeta, object)):
+    @abstractmethod
     def test_permission(self, handler, verb, **kwargs):
-        raise NotImplementedError("You need to implement test_permission")
+        pass
 
+    @abstractmethod
     def permission_failed(self, handler):
-        raise NotImplementedError("You need to implement permission_failed")
+        pass
 
 
 class LoginRequired(RoutePermission):
